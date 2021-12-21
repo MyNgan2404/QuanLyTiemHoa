@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Giỏ hàng - NHÓM 3
+{% endblock %}
+<script src="https://js.stripe.com/v3/"></script>
+{% block content %}
+	{% with msgs =  get_flashed_messages(with_categories=True) %}
+	{% for c, msg in msgs %}
+		{% if c == 'error' %}
+			<div class="flash-error">
+		{% else %}
+			<div class="success">
+		{% endif %}
+			{{ msg | safe }}</div><br>
+	{% endfor %}
+	{% endwith %}
+
+	{% if not items %}
+		<div class="flash-error">
+			Giỏ hàng trống!<br>
+			<a href="{{ url_for('home') }}">Mua Hàng</a>
+		</div>
+	{% else %}
+		<a href="{{ url_for('home') }}" class="right-item">Thêm các mặt hàng khác</a><br><br>
+	{% endif %}
+
+	<div class="items">
+	{% for i in range(items|length) %}
+    <div class="item">
+		<div class="item-wrapper">
+			<div class="img-wrapper">
+				<img src="{{ items[i].image }}" class="pic">
+			</div>
+			<b>{{ items[i].name }}</b>
+			<span class="right-item">{{ items[i].price }} VNĐ</span><br>
+			Số lượng: 
+			<span class="right-item">{{ quantity[i] }}</span><br>
+			Tổng tiền:
+			<span class="right-item">{{ quantity[i]*items[i].price }} VNĐ</span>
+			<br><br>
+			<a href="{{ url_for('remove', id=items[i].id, quantity=quantity[i]) }}">
+				<button class="remove-from-cart"> Xóa mặt hàng </button>
+			</a>
+		</div>
+	</div>
+        {% endfor %}
+	</div>
+{% endblock %}
